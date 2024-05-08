@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <title>Modern Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+</head>
+<body>
+
+
+<input type="checkbox" id="menu-toggle">
+<div class="sidebar">
+    <div class="side-header">
+        <h3>S<span>Product</span></h3>
+    </div>
+
+    <div class="side-content">
+        <div class="profile">
+            <h4>David Green</h4>
+            <small>Art Director</small>
+        </div>
+
+        <div class="side-menu">
+            <ul>
+                <li>
+                    <a href="" class="active">
+                        <span class="las la-home"></span>
+                        <small>Dashboard</small>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+
+    <header>
+        <div class="header-content">
+            <label for="menu-toggle">
+                <span class="las la-bars"></span>
+            </label>
+
+            <div class="header-menu">
+                <label>
+                    <span class="las la-search"></span>
+                </label>
+
+                <div class="notify-icon">
+                    <span class="las la-envelope"></span>
+                    <span class="notify">4</span>
+                </div>
+
+                <div class="notify-icon">
+                    <span class="las la-bell"></span>
+                    <span class="notify">3</span>
+                </div>
+
+                <div class="user">
+
+
+                    <span class="las la-power-off"></span>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <main>
+
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <small>Home / Dashboard</small>
+            <div th:if="${success}" class="alert alert-success" role="alert">
+                <p th:text="${success}"></p>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <div class="records table-responsive">
+
+                <div class="record-header">
+                    <div class="add">
+                        <a href="/products/add"><button style="cursor: pointer">Add Product</button></a>
+                    </div>
+
+                    <form id="search-form" action="http://localhost:8080/products" method="GET">
+                        <div class="browse">
+                            <input type="search" name="search" placeholder="Search" class="record-search" id="search-input">
+                        </div>
+                    </form>
+                </div>
+
+                <div>
+                    <table width="100%">
+                        <thead>
+                        <tr>
+                            <th><span class="las la-sort"></span> ID</th>
+                            <th><span class="las la-sort"></span> Name</th>
+                            <th><span class="las la-sort"></span> Price</th>
+                            <th><span class="las la-sort"></span> Status</th>
+                            <th><span class="las la-sort"></span> TypeProduct</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="product: ${productList}">
+                            <td th:text="${product.id}"></td>
+                            <td th:text="${product.nameProduct}"></td>
+                            <td th:text="${product.price}"></td>
+                            <td th:text="${product.status}"></td>
+                            <td th:if="${product.typeProductId != null}" th:text="${product.typeProductId}"></td>
+
+
+                            <td>
+                                <div class="actions">
+                                    <a th:href="@{'/products/edit/' + ${product.id}}"><span class="las la-pen icons"></span></a>
+                                    <a th:href="@{'/products/delete/' + ${product.id}}" onclick="return confirm('Do you want to delete this product?')">
+                                        <span class="las la-trash icons"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let searchForm = document.getElementById("search-form");
+        let searchInput = document.getElementById("search-input");
+
+        // Load search term from URL query string
+        let urlParams = new URLSearchParams(window.location.search);
+        let searchTerm = urlParams.get('search');
+        if (searchTerm) {
+            searchInput.value = searchTerm;
+        }
+
+        // Submit form when Enter key is pressed
+        searchInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchForm.submit(); // Submit the form
+                event.preventDefault(); // Prevent default form submission behavior
+            }
+        });
+    });
+</script>
+</body>
+</html>
